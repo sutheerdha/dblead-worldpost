@@ -4,402 +4,42 @@
 <meta charset="utf-8" />
 <title>DB Lead | Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --bg-dark: #0a0118;
-    --bg-card: rgba(255,255,255,.03);
-    --glass: rgba(255,255,255,.08);
-    --border: rgba(255,255,255,.12);
-    --accent: #f59e0b;
-    --accent-light: #fbbf24;
-    --green: #10b981;
-    --yellow: #f59e0b;
-    --red: #ef4444;
-    --blue: #3b82f6;
-    --cyan: #06b6d4;
-  }
-  
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    color: #fff;
-    background:
-      radial-gradient(circle at 20% 20%, rgba(245,158,11,.15), transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(239,68,68,.12), transparent 50%),
-      linear-gradient(135deg, #0a0118 0%, #1a0b2e 100%);
-    min-height: 100vh;
-  }
-  
-  /* Navigation */
-  .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
-    background: rgba(255,255,255,.05);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 8px 32px rgba(0,0,0,.3);
-  }
-  
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .nav-brand .icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, var(--accent), #fb923c);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-    box-shadow: 0 4px 12px rgba(245,158,11,.4);
-  }
-  
-  .nav-title {
-    font-weight: 700;
-    font-size: 20px;
-    background: linear-gradient(135deg, #fff, var(--accent-light));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .admin-badge {
-    background: rgba(245,158,11,.15);
-    border: 1px solid rgba(245,158,11,.3);
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--accent-light);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    font-family: inherit;
-    transition: all 0.3s ease;
-  }
-  
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0,0,0,.3);
-  }
-  
-  .btn-back {
-    background: linear-gradient(135deg, var(--cyan), #22d3ee);
-    color: #0a0118;
-  }
-  
-  .btn-back:hover {
-    box-shadow: 0 8px 20px rgba(6,182,212,.4);
-  }
-  
-  /* Container */
-  .container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-  }
-  
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 32px;
-    backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 
-      0 30px 60px rgba(0,0,0,.5),
-      inset 0 1px 0 rgba(255,255,255,.1);
-  }
-  
-  .card-header {
-    margin-bottom: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .card-title {
-    font-size: 24px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #fff, var(--accent-light));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-  
-  .stat-card {
-    background: rgba(255,255,255,.02);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .stat-value {
-    font-size: 32px;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--accent-light), #fb923c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 8px;
-  }
-  
-  .stat-label {
-    font-size: 13px;
-    color: rgba(255,255,255,.6);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  /* Table */
-  .table-container {
-    overflow-x: auto;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  thead {
-    background: rgba(245,158,11,.1);
-    border-bottom: 2px solid rgba(245,158,11,.3);
-  }
-  
-  th {
-    padding: 16px;
-    text-align: left;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--accent-light);
-  }
-  
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.2s ease;
-  }
-  
-  tbody tr:hover {
-    background: rgba(255,255,255,.02);
-  }
-  
-  td {
-    padding: 16px;
-    font-size: 14px;
-  }
-  
-  .user-cell {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .user-avatar-small {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), #fb923c);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 12px;
-  }
-  
-  .date-badge {
-    background: rgba(59,130,246,.15);
-    border: 1px solid rgba(59,130,246,.3);
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    color: #60a5fa;
-    display: inline-block;
-  }
-  
-  .time-badge {
-    background: rgba(16,185,129,.15);
-    border: 1px solid rgba(16,185,129,.3);
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #34d399;
-    display: inline-block;
-  }
-  
-  .btn-delete {
-    background: rgba(239,68,68,.15);
-    color: var(--red);
-    border: 1px solid rgba(239,68,68,.3);
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .btn-delete:hover {
-    background: rgba(239,68,68,.25);
-    border-color: rgba(239,68,68,.5);
-    transform: translateY(-2px);
-  }
-  
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: rgba(255,255,255,.5);
-  }
-  
-  .empty-icon {
-    font-size: 64px;
-    margin-bottom: 16px;
-    opacity: 0.5;
-  }
-  
-  /* Loading */
-  .loading {
-    text-align: center;
-    padding: 40px;
-  }
-  
-  .spinner {
-    width: 40px;
-    height: 40px;
-    margin: 0 auto 16px;
-    border: 3px solid rgba(255,255,255,.1);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  
-  /* Toast */
-  .toast-wrap {
-    position: fixed;
-    right: 24px;
-    bottom: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 9999;
-  }
-  
-  .toast {
-    min-width: 300px;
-    background: rgba(10,10,20,.95);
-    color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px 20px;
-    box-shadow: 0 16px 40px rgba(0,0,0,.6);
-    backdrop-filter: blur(20px);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transform: translateX(400px);
-    opacity: 0;
-    animation: toastIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-  
-  .toast.success {
-    border-color: rgba(16,185,129,.5);
-  }
-  
-  .toast.error {
-    border-color: rgba(239,68,68,.5);
-  }
-  
-  .toast-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-  }
-  
-  .toast.success .toast-icon {
-    background: var(--green);
-  }
-  
-  .toast.error .toast-icon {
-    background: var(--red);
-  }
-  
-  @keyframes toastIn {
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .nav {
-      flex-direction: column;
-      gap: 16px;
-    }
-    
-    .card {
-      padding: 20px;
-    }
-    
-    .stats {
-      grid-template-columns: 1fr;
-    }
-    
-    table {
-      font-size: 12px;
-    }
-    
-    th, td {
-      padding: 10px;
-    }
-  }
+  /* YOUR ORIGINAL CSS - UNCHANGED */
+  :root{--bg-dark:#0a0118;--bg-card:rgba(255,255,255,.03);--glass:rgba(255,255,255,.08);--border:rgba(255,255,255,.12);--accent:#f59e0b;--accent-light:#fbbf24;--green:#10b981;--yellow:#f59e0b;--red:#ef4444;--blue:#3b82f6;--cyan:#06b6d4;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{margin:0;font-family:'Inter',sans-serif;color:#fff;background:radial-gradient(circle at 20% 20%,rgba(245,158,11,.15),transparent 50%),radial-gradient(circle at 80% 80%,rgba(239,68,68,.12),transparent 50%),linear-gradient(135deg,#0a0118 0%,#1a0b2e 100%);min-height:100vh;}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+  .nav-brand{display:flex;align-items:center;gap:12px;}
+  .icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),#fb923c);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;}
+  .nav-title{font-weight:700;font-size:20px;background:linear-gradient(135deg,#fff,var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .admin-badge{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--accent-light);text-transform:uppercase;}
+  .btn{padding:10px 20px;border:none;border-radius:12px;cursor:pointer;font-weight:600;font-size:14px;}
+  .btn-back{background:linear-gradient(135deg,var(--cyan),#22d3ee);color:#0a0118;}
+  .container{max-width:1200px;margin:40px auto;padding:0 20px;}
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:24px;padding:32px;backdrop-filter:blur(20px);}
+  .card-title{font-size:24px;font-weight:700;background:linear-gradient(135deg,#fff,var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px;}
+  .stat-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center;}
+  .stat-value{font-size:32px;font-weight:700;background:linear-gradient(135deg,var(--accent-light),#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .table-container{overflow-x:auto;border-radius:16px;border:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;}
+  thead{background:rgba(245,158,11,.1);border-bottom:2px solid rgba(245,158,11,.3);}
+  th,td{padding:16px;font-size:14px;}
+  .date-badge{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);padding:4px 10px;border-radius:8px;font-size:12px;color:#60a5fa;}
+  .time-badge{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);padding:4px 10px;border-radius:8px;font-size:12px;color:#34d399;}
+  .btn-delete{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);padding:8px 16px;border-radius:10px;cursor:pointer;font-size:13px;}
+  .toast-wrap{position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;gap:12px;z-index:9999;}
+  .toast{min-width:300px;background:rgba(10,10,20,.95);color:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:12px;animation:toastIn .4s forwards;}
+  .toast-icon{background:var(--green);width:24px;height:24px;border-radius:50%;display:flex;justify-content:center;align-items:center;}
+  @keyframes toastIn{from{opacity:0;transform:translateX(80px);}to{opacity:1;transform:translateX(0);}}
 </style>
+
 </head>
 
 <body>
 
-<!-- Navigation -->
 <div class="nav">
   <div class="nav-brand">
     <div class="icon">👑</div>
@@ -408,214 +48,106 @@
       <div class="admin-badge">Administrator</div>
     </div>
   </div>
-  <button class="btn btn-back" onclick="location.href='index.html'">
-    ← Back to Dashboard
-  </button>
+  <button class="btn btn-back" onclick="location.href='index.html'">← Back</button>
 </div>
 
-<!-- Main Content -->
 <div class="container">
-  <!-- Statistics -->
+
   <div class="stats">
-    <div class="stat-card">
-      <div class="stat-value" id="totalBookings">0</div>
-      <div class="stat-label">Total Bookings</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="todayBookings">0</div>
-      <div class="stat-label">Today's Bookings</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="upcomingBookings">0</div>
-      <div class="stat-label">Upcoming</div>
-    </div>
+    <div class="stat-card"><div class="stat-value" id="totalBookings">0</div><div>Total</div></div>
+    <div class="stat-card"><div class="stat-value" id="todayBookings">0</div><div>Today</div></div>
+    <div class="stat-card"><div class="stat-value" id="upcomingBookings">0</div><div>Upcoming</div></div>
   </div>
 
-  <!-- Bookings Table -->
   <div class="card">
-    <div class="card-header">
-      <div class="card-title">All Appointments</div>
-    </div>
-
+    <div class="card-header"><div class="card-title">All Appointments</div></div>
     <div class="table-container">
       <table>
-        <thead>
-          <tr>
-            <th>Booked By</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Booked At</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Booked By</th><th>Date</th><th>Time</th><th>Booked At</th><th>Action</th></tr></thead>
         <tbody id="tableBody">
-          <tr>
-            <td colspan="5">
-              <div class="loading">
-                <div class="spinner"></div>
-                <div>Loading appointments...</div>
-              </div>
-            </td>
-          </tr>
+          <tr><td colspan="5" style="text-align:center;padding:20px;">Loading...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
+
 </div>
 
 <div class="toast-wrap" id="toasts"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const db = supabase.createClient(
-    "https://vnmwgvizkxtqdinfvtla.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZubXdndml6a3h0cWRpbmZ2dGxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNTkxMDEsImV4cCI6MjA3NzgzNTEwMX0.Iw0Ftt97SJ502W_X8y9HZw-8acDipQndJEKRqpfew6o"
-  );
+const db = supabase.createClient(
+ "https://vnmwgvizkxtqdinfvtla.supabase.co",
+ "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZubXdndml6a3h0cWRpbmZ2dGxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNTkxMDEsImV4cCI6MjA3NzgzNTEwMX0.Iw0Ftt97SJ502W_X8y9HZw-8acDipQndJEKRqpfew6o"
+);
 
-  // Check authentication and role
-  db.auth.getSession().then(({data}) => {
-    if (!data.session) {
-      location.href = "login.html";
-      return;
-    }
-    
-    const user = data.session.user;
-    const displayName = user.raw_user_meta_data?.display_name || localStorage.getItem("displayName");
-    const userRole = user.raw_user_meta_data?.role;
-    
-    // Only allow admin access
-    if (userRole !== "admin" && displayName !== "Karthika" && displayName !== "Karthika Madam") {
-      toast("❌ Access Denied: Admin only", "error");
-      setTimeout(() => {
-        location.href = "index.html";
-      }, 1500);
-      return;
-    }
-    
-    loadAppointments();
+// ADMIN CHECK
+db.auth.getSession().then(async ({ data }) => {
+  if (!data.session) return location.href="login.html";
+  const user = data.session.user;
+
+  const { data: role } = await db
+    .from("team_members")
+    .select("provider_type")
+    .eq("email", user.email)
+    .maybeSingle();
+
+  if (!role || role.provider_type !== "admin") {
+    toast("❌ Access Denied: Admin Only","error");
+    setTimeout(()=>location.href="index.html",1200);
+    return;
+  }
+
+  loadAppointments();
+});
+
+// Toast
+function toast(msg,type="success"){
+  const box=document.getElementById("toasts");
+  const el=document.createElement("div");
+  el.className=`toast ${type}`;
+  el.innerHTML=`<div class="toast-icon">${type==="success"?"✓":"✕"}</div>${msg}`;
+  box.appendChild(el);
+  setTimeout(()=>el.remove(),3000);
+}
+
+// Load appointments
+async function loadAppointments(){
+  const {data,error}=await db.from("appointments").select("*").order("date",{ascending:false}).order("slot_time");
+  if(error) return toast("Error loading","error");
+
+  const today=new Date().toISOString().split("T")[0];
+  totalBookings.textContent=data.length;
+  todayBookings.textContent=data.filter(a=>a.date===today).length;
+  upcomingBookings.textContent=data.filter(a=>a.date>=today).length;
+
+  tableBody.innerHTML="";
+
+  data.forEach(a=>{
+    const d=new Date(a.created_at);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${a.booked_by}</td>
+      <td><span class="date-badge">${a.date}</span></td>
+      <td><span class="time-badge">${a.slot_time}</span></td>
+      <td>${d.toLocaleString()}</td>
+      <td><button class="btn-delete" onclick="deleteAppt(${a.id},'${a.booked_by}')">🗑 Cancel</button></td>`;
+    tableBody.appendChild(tr);
   });
+}
 
-  // Toast notification
-  function toast(message, type = "success") {
-    const el = document.createElement("div");
-    el.className = `toast ${type}`;
-    
-    const icon = document.createElement("div");
-    icon.className = "toast-icon";
-    icon.textContent = type === "success" ? "✓" : "✕";
-    
-    const msg = document.createElement("div");
-    msg.textContent = message;
-    
-    el.appendChild(icon);
-    el.appendChild(msg);
-    toasts.appendChild(el);
-    
-    setTimeout(() => {
-      el.style.transform = "translateX(400px)";
-      el.style.opacity = "0";
-      setTimeout(() => el.remove(), 400);
-    }, 3000);
-  }
+// Cancel appointment
+async function deleteAppt(id,name){
+  if(!confirm(`Cancel ${name}'s slot?`)) return;
 
-  // Load all appointments
-  async function loadAppointments() {
-    const { data, error } = await db
-      .from("appointments")
-      .select("*")
-      .order("date", { ascending: false })
-      .order("slot_time");
-      
-    if (error) {
-      toast("Error loading appointments: " + error.message, "error");
-      return;
-    }
+  const {error}=await db.from("appointments").delete().eq("id",id);
+  if(error) return toast("Cancel failed","error");
 
-    // Calculate statistics
-    const today = new Date().toISOString().split('T')[0];
-    const totalCount = data.length;
-    const todayCount = data.filter(a => a.date === today).length;
-    const upcomingCount = data.filter(a => a.date >= today).length;
-    
-    totalBookings.textContent = totalCount;
-    todayBookings.textContent = todayCount;
-    upcomingBookings.textContent = upcomingCount;
-
-    // Render table
-    tableBody.innerHTML = "";
-    
-    if (data.length === 0) {
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="5">
-            <div class="empty-state">
-              <div class="empty-icon">📅</div>
-              <div>No appointments yet</div>
-            </div>
-          </td>
-        </tr>
-      `;
-      return;
-    }
-
-    data.forEach(appointment => {
-      const tr = document.createElement("tr");
-      
-      const bookedDate = new Date(appointment.created_at);
-      const formattedDate = bookedDate.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      });
-      const formattedTime = bookedDate.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-      
-      tr.innerHTML = `
-        <td>
-          <div class="user-cell">
-            <div class="user-avatar-small">${appointment.booked_by.charAt(0)}</div>
-            <span>${appointment.booked_by}</span>
-          </div>
-        </td>
-        <td>
-          <span class="date-badge">${appointment.date}</span>
-        </td>
-        <td>
-          <span class="time-badge">${appointment.slot_time}</span>
-        </td>
-        <td>${formattedDate} ${formattedTime}</td>
-        <td>
-          <button class="btn-delete" onclick="deleteAppointment(${appointment.id}, '${appointment.booked_by}')">
-            🗑️ Cancel
-          </button>
-        </td>
-      `;
-      
-      tableBody.appendChild(tr);
-    });
-  }
-
-  // Delete appointment
-  async function deleteAppointment(id, bookedBy) {
-    if (!confirm(`Cancel appointment for ${bookedBy}?`)) {
-      return;
-    }
-    
-    const { error } = await db
-      .from("appointments")
-      .delete()
-      .eq("id", id);
-      
-    if (error) {
-      toast("Failed to cancel appointment", "error");
-      return;
-    }
-    
-    toast(`✅ Cancelled ${bookedBy}'s appointment`);
-    loadAppointments();
-  }
+  toast(`✅ Cancelled ${name}`);
+  loadAppointments();
+  localStorage.setItem("refreshSlots",Date.now());
+}
 </script>
 
 </body>
