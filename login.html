@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>DB Lead | Sign In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #8b5cf6;
+      --secondary: #06b6d4;
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      
+      /* User Colors */
+      --admin-color: #f59e0b;
+      --member1-color: #3b82f6;
+      --member2-color: #10b981;
+      --member3-color: #ec4899;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e3a8a 100%);
+      position: relative;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+    
+    /* Animated Background */
+    body::before, body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.3;
+      animation: float 20s ease-in-out infinite;
+    }
+    body::before {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--primary), transparent);
+      top: -300px;
+      left: -200px;
+    }
+    body::after {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--secondary), transparent);
+      bottom: -200px;
+      right: -150px;
+      animation-delay: -10s;
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 30px) scale(0.9); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1400px;
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .card {
+      flex: 1;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: 38px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      letter-spacing: 0.2px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      color: #1e293b;
+      transition: all 0.3s ease;
+    }
+
+    input::placeholder {
+      color: #94a3b8;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 12px 24px rgba(139, 92, 246, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: var(--text);
+    }
+
+    /* Quick Login Card */
+    .quick-login-card {
+      display: flex;
+      flex-direction: column;
+      flex: 1.5;
+    }
+
+    .quick-login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .quick-login-title {
+      font-size: 38px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .quick-login-subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .users-container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      flex: 1;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      border-radius: 2px;
+    }
+
+    .admin-section .section-title::before {
+      background: var(--admin-color);
+    }
+
+    .members-section .section-title::before {
+      background: linear-gradient(135deg, var(--member1-color), var(--member3-color));
+    }
+
+    .user-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .user-btn {
+      padding: 28px 20px;
+      border: 2px solid;
+      border-radius: 16px;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 140px;
+      background: rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .user-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.1;
+      transition: opacity 0.3s ease;
+    }
+
+    .user-btn:hover::after {
+      opacity: 0.2;
+    }
+
+    .user-icon {
+      font-size: 48px;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    }
+
+    .user-label {
+      position: relative;
+      z-index: 1;
+    }
+
+    .role-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Admin Karthika - Golden/Amber */
+    .user-btn.admin {
+      border-color: var(--admin-color);
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.3);
+    }
+
+    .user-btn.admin::after {
+      background: radial-gradient(circle at center, var(--admin-color), transparent);
+    }
+
+    .user-btn.admin:hover {
+      border-color: #fbbf24;
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(245, 158, 11, 0.5);
+    }
+
+    .user-btn.admin .role-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    /* Member 1 - Bharath - Blue */
+    .user-btn.member1 {
+      border-color: var(--member1-color);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+    }
+
+    .user-btn.member1::after {
+      background: radial-gradient(circle at center, var(--member1-color), transparent);
+    }
+
+    .user-btn.member1:hover {
+      border-color: #60a5fa;
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(59, 130, 246, 0.5);
+    }
+
+    .user-btn.member1 .role-badge {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    /* Member 2 - Ramesh - Green */
+    .user-btn.member2 {
+      border-color: var(--member2-color);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+    }
+
+    .user-btn.member2::after {
+      background: radial-gradient(circle at center, var(--member2-color), transparent);
+    }
+
+    .user-btn.member2:hover {
+      border-color: #34d399;
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(16, 185, 129, 0.5);
+    }
+
+    .user-btn.member2 .role-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    /* Member 3 - Sutheerdha - Pink */
+    .user-btn.member3 {
+      border-color: var(--member3-color);
+      box-shadow: 0 8px 24px rgba(236, 72, 153, 0.3);
+    }
+
+    .user-btn.member3::after {
+      background: radial-gradient(circle at center, var(--member3-color), transparent);
+    }
+
+    .user-btn.member3:hover {
+      border-color: #f472b6;
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(236, 72, 153, 0.5);
+    }
+
+    .user-btn.member3 .role-badge {
+      background: rgba(236, 72, 153, 0.2);
+      color: #f472b6;
+      border: 1px solid rgba(244, 114, 182, 0.3);
+    }
+
+    .user-btn:active {
+      transform: translateY(-2px) scale(1);
+    }
+
+    /* Decorative Elements */
+    .glow-orb {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .glow-orb-1 {
+      background: var(--primary);
+      top: -100px;
+      right: -50px;
+      animation: glow-pulse 4s ease-in-out infinite;
+    }
+
+    .glow-orb-2 {
+      background: var(--secondary);
+      bottom: -80px;
+      left: -60px;
+      animation: glow-pulse 4s ease-in-out infinite 2s;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.15; transform: scale(1); }
+      50% { opacity: 0.25; transform: scale(1.1); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .container {
+        flex-direction: column;
+        max-width: 600px;
+      }
+      
+      .user-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+    }
+
+    @media (max-width: 500px) {
+      .user-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sign In Card -->
+    <div class="card">
+      <div class="glow-orb glow-orb-1"></div>
+      
+      <div class="header">
+        <h1>Sign in</h1>
+        <div class="subtitle">DB Team — CEPT India</div>
+      </div>
+
+      <form onsubmit="login(event)">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="text" 
+            id="email" 
+            placeholder="e.g. bharath@dblead.local"
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button type="submit" class="btn-primary">Sign In</button>
+      </form>
+
+      <div class="footer">
+        <a href="contact.html">Contact Us</a>
+      </div>
+    </div>
+
+    <!-- Quick Login Card -->
+    <div class="card quick-login-card">
+      <div class="glow-orb glow-orb-2"></div>
+      
+      <div class="quick-login-header">
+        <div class="quick-login-title">Quick Login</div>
+        <div class="quick-login-subtitle">Select your account to continue</div>
+      </div>
+
+      <div class="users-container">
+        <!-- Admin Section -->
+        <div class="admin-section">
+          <div class="section-title">
+            <span>👑 Administrator</span>
+          </div>
+          <div class="user-grid">
+            <button type="button" class="user-btn admin" onclick="useQuick('Karthika')">
+              <div class="user-icon">⭐</div>
+              <div class="user-label">Karthika</div>
+              <div class="role-badge">Admin</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Members Section -->
+        <div class="members-section">
+          <div class="section-title">
+            <span>👥 Team Members</span>
+          </div>
+          <div class="user-grid">
+            <button type="button" class="user-btn member1" onclick="useQuick('Bharath')">
+              <div class="user-icon">🔷</div>
+              <div class="user-label">Bharath</div>
+              <div class="role-badge">Cheetah Member</div>
+            </button>
+            <button type="button" class="user-btn member2" onclick="useQuick('Ramesh')">
+              <div class="user-icon">🟢</div>
+              <div class="user-label">Ramesh</div>
+              <div class="role-badge">Proactive Member</div>
+            </button>
+            <button type="button" class="user-btn member3" onclick="useQuick('Sutheerdha')">
+              <div class="user-icon">💎</div>
+              <div class="user-label">Sutheerdha</div>
+              <div class="role-badge">Junior Member</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://vnmwgvizkxtqdinfvtla.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZubXdndml6a3h0cWRpbmZ2dGxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNTkxMDEsImV4cCI6MjA3NzgzNTEwMX0.Iw0Ftt97SJ502W_X8y9HZw-8acDipQndJEKRqpfew6o";
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function login(event) {
+      if (event) event.preventDefault();
+      
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        alert("⚠️ Please enter both email and password");
+        return;
+      }
+
+      const { data, error } = await db.auth.signInWithPassword({ email, password });
+      
+      if (error) { 
+        alert("❌ Login failed: " + error.message); 
+        return; 
+      }
+
+      const displayName = data.user?.raw_user_meta_data?.display_name || email;
+      const userRole = data.user?.raw_user_meta_data?.role;
+      
+      localStorage.setItem("displayName", displayName);
+
+      // Redirect based on role
+      // Admin (Karthika) → Admin Panel
+      // Members → Dashboard
+      if (userRole === "admin" || displayName === "Karthika" || displayName === "Karthika Madam") {
+        location.href = "admin.html";
+      } else {
+        location.href = "index.html";
+      }
+    }
+
+    function useQuick(name) {
+      document.getElementById('email').value = name.toLowerCase() + "@dblead.local";
+      document.getElementById('password').value = "chennai@tl";
+      
+      // Trigger login automatically
+      login();
+    }
+  </script>
+</body>
+</html>
