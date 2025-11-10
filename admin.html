@@ -58,11 +58,9 @@ th,td{padding:16px;font-size:14px;}
     <div class="card-header"><div class="card-title">All Appointments</div></div>
     <div class="table-container">
       <table>
-        <thead>
-          <tr><th>Booked By</th><th>Date</th><th>Time</th><th>Status</th><th>Booked At</th><th>Action</th></tr>
-        </thead>
+        <thead><tr><th>Booked By</th><th>Date</th><th>Time</th><th>Booked At</th><th>Action</th></tr></thead>
         <tbody id="tableBody">
-          <tr><td colspan="6" style="text-align:center;padding:20px;">Loading...</td></tr>
+          <tr><td colspan="5" style="text-align:center;padding:20px;">Loading...</td></tr>
         </tbody>
       </table>
     </div>
@@ -78,9 +76,18 @@ const db = supabase.createClient(
  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZubXdndml6a3h0cWRpbmZ2dGxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNTkxMDEsImV4cCI6MjA3NzgzNTEwMX0.Iw0Ftt97SJ502W_X8y9HZw-8acDipQndJEKRqpfew6o"
 );
 
-// Ensure we are logged in and are admin
+function toast(msg,type="success"){
+  const box=document.getElementById("toasts");
+  const el=document.createElement("div");
+  el.className=`toast ${type}`;
+  el.innerHTML=`<div class="toast-icon">${type==="success"?"✓":"✕"}</div><div>${msg}</div>`;
+  box.appendChild(el);
+  setTimeout(()=>el.remove(),3000);
+}
+
+// Strict admin gate
 db.auth.getSession().then(async ({ data }) => {
-  if (!data?.session) return location.href="login.html";
+  if (!data?.session) return location.replace("login.html");
   const user = data.session.user;
 
   const { data: role } = await db
@@ -90,69 +97,57 @@ db.auth.getSession().then(async ({ data }) => {
     .maybeSingle();
 
   if (!role || role.provider_type !== "admin") {
-    toast("❌ Access Denied: Admin Only", "error");
-    setTimeout(()=>location.href="index.html",1200);
+    toast("❌ Access Denied: Admin Only","error");
+    setTimeout(()=>location.replace("index.html"),1200);
     return;
   }
-
-  await loadAppointments();
-
-  // Realtime subscribe
-  db.channel('room:appointments-admin')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'appointments' }, () => loadAppointments())
-    .subscribe();
+  loadAppointments();
 });
 
-function toast(msg,type="success"){
-  const box=document.getElementById("toasts");
-  const el=document.createElement("div");
-  el.className=`toast ${type}`;
-  el.innerHTML=`<div class="toast-icon">${type==="success"?"✓":"✕"}</div>${msg}`;
-  box.appendChild(el);
-  setTimeout(()=>el.remove(),3000);
+function hhmmPretty(hhmm){
+  const [h,m]=hhmm.split(':').map(Number);
+  const d = new Date(Date.UTC(2000,0,1,h,m));
+  return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
 }
 
 async function loadAppointments(){
-  const { data, error } = await db
-    .from("appointments")
+  const {data,error}=await db.from("appointments")
     .select("*")
-    .order("date", { ascending:false })
-    .order("slot_time", { ascending:true });
+    .order("date",{ascending:false})
+    .order("slot_time",{ascending:true});
 
-  if (error) { toast("Error loading", "error"); return; }
+  if(error){ toast("Error loading","error"); return; }
 
-  const today = new Date().toISOString().split("T")[0];
+  const now = new Date();
+  const today = now.toISOString().slice(0,10);
+
   totalBookings.textContent = data.length;
-  todayBookings.textContent = data.filter(a => a.date === today).length;
-  upcomingBookings.textContent = data.filter(a => a.date >= today && a.status === 'booked').length;
+  todayBookings.textContent = data.filter(a=>a.date===today).length;
+  upcomingBookings.textContent = data.filter(a=>a.date>=today).length;
 
-  tableBody.innerHTML = "";
+  tableBody.innerHTML="";
+
   data.forEach(a=>{
-    const d = new Date(a.created_at);
-    const displayTime = (a.slot_time || '').toString().slice(0,5); // HH:MM
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+    const d=new Date(a.created_at);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
       <td>${a.booked_by}</td>
       <td><span class="date-badge">${a.date}</span></td>
-      <td><span class="time-badge">${displayTime}</span></td>
-      <td>${a.status}</td>
+      <td><span class="time-badge">${hhmmPretty(a.slot_time.slice(0,5))}</span></td>
       <td>${d.toLocaleString()}</td>
-      <td>
-        <button class="btn-delete" onclick="deleteAppt(${a.id}, '${a.booked_by.replace(/'/g,"&#39;")}')">🗑 Cancel</button>
-      </td>`;
+      <td><button class="btn-delete" onclick="deleteAppt(${a.id},'${a.booked_by.replace(/'/g,"\\'")}')">🗑 Cancel</button></td>`;
     tableBody.appendChild(tr);
   });
 }
 
-async function deleteAppt(id, name){
+async function deleteAppt(id,name){
   if(!confirm(`Cancel ${name}'s slot?`)) return;
-
-  const { error } = await db.from("appointments").delete().eq("id", id);
-  if (error) { toast("Cancel failed", "error"); return; }
-
+  const {error}=await db.from("appointments").delete().eq("id",id);
+  if(error){ toast("Cancel failed","error"); return; }
   toast(`✅ Cancelled ${name}`);
-  await loadAppointments();
-  localStorage.setItem("refreshSlots", Date.now());
+  loadAppointments();
+  // ping index page
+  localStorage.setItem("refreshSlots",Date.now());
 }
 </script>
 </body>
